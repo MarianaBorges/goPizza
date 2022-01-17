@@ -25,6 +25,13 @@ import { Button } from "@components/Button";
 
 export function Product(){
     const [ image, setImage ] = useState('');
+    const [ name, setName ] = useState('');
+    const [ description, setDescription ] = useState('');
+    const [ priceSizeP, setPriceSizeP ] = useState('');
+    const [ priceSizeM, setPriceSizeM ] = useState('');
+    const [ priceSizeG, setPriceSizeG ] = useState('');
+    const [ isLoading, setIsLoading ] = useState(false);
+
 
     async function handleImagePicker(){
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -66,7 +73,10 @@ export function Product(){
                 <Form>
                     <InputGroup>
                         <Label>Nome</Label>
-                        <Input />
+                        <Input 
+                            value={name}
+                            onChangeText={setName}
+                        />
                     </InputGroup>
 
                     <InputGroup>
@@ -78,18 +88,35 @@ export function Product(){
                             multiline
                             maxLength={60}
                             style={{ height: 80}}
+                            value={description}
+                            onChangeText={setDescription}
                         />
                     </InputGroup>
 
                     <InputGroup>
                         <Label>Tamanhos e Preços</Label>
 
-                        <InputPrice size="P"/>
-                        <InputPrice size="M"/>
-                        <InputPrice size="G"/>
+                        <InputPrice 
+                            size="P"
+                            value={priceSizeP}
+                            onChangeText={setPriceSizeP}    
+                        />
+                        <InputPrice 
+                            size="M"
+                            value={priceSizeM}
+                            onChangeText={setPriceSizeM}   
+                        />
+                        <InputPrice 
+                            size="G"
+                            value={priceSizeG}
+                            onChangeText={setPriceSizeG}       
+                        />
                     </InputGroup>
 
-                    <Button title="Cadastrar Pizza"/>
+                    <Button 
+                        title="Cadastrar Pizza"
+                        isLoading={isLoading}
+                    />
                 
                 </Form>
             </ScrollView>
