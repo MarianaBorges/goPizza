@@ -1,13 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Platform, TouchableOpacity } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 import { ButtonBack } from "@components/ButtonBack";
 import { Photo } from "@components/Photo";
 
-import { Container, Header, Title, DeleteLabel} from "./styles";
+import { 
+    Container, 
+    Header, 
+    Title, 
+    DeleteLabel,
+    Upload,
+    PickImageButton
+} from "./styles";
+import { InputPrice } from "@components/InputPrice";
 
 export function Product(){
-    return(
+    const [ image, setImage ] = useState('');
+
+    async function handleImagePicker(){
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if(status === 'granted'){
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                aspect: [4, 4]
+            });
+
+            if(!result.cancelled){
+                setImage(result.uri);
+            }
+        }
+    }
+    return( 
         <Container behavior={Platform.OS === "ios" ? "padding" : undefined}>
             <Header>
                 <ButtonBack /> 
@@ -18,7 +43,19 @@ export function Product(){
                     <DeleteLabel>Deletar</DeleteLabel>
                 </TouchableOpacity>
             </Header>
-            <Photo uri={null}/>
+
+            <Upload>
+                <Photo uri={image}/>   
+
+                <PickImageButton 
+                    title="Carregar" 
+                    type="secundary"
+                    onPress={handleImagePicker}
+                />             
+            </Upload>
+            <InputPrice size="P"/>
+            <InputPrice size="M"/>
+            <InputPrice size="G"/>
         </Container>
     )
 }
