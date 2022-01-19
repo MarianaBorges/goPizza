@@ -10,7 +10,10 @@ import {
     Greeting, 
     GreetingEmoji, 
     GreetingText, 
-    Header 
+    Header,
+    Title,
+    MenuHeader,
+    MenuItemsNumber 
 } from "./styles";
 import { useTheme } from "styled-components/native";
 
@@ -35,6 +38,10 @@ export function Home(){
 
             <Search onSearch={()=>console.log('funciona')} onClear={()=>console.log('limpo')}/>
 
+            <MenuHeader>
+                <Title>Cardápio</Title>
+                <MenuItemsNumber> 10 pizzas</MenuItemsNumber>
+            </MenuHeader>
         </Container>
     )
 }
