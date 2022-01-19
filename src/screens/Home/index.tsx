@@ -3,6 +3,7 @@ import { TouchableOpacity } from "react-native";
 import { MaterialIcons} from '@expo/vector-icons'
 
 import happyEmoje from "@assets/happy.png";
+import { Search } from "@components/Search";
 
 import { 
     Container, 
@@ -31,6 +32,9 @@ export function Home(){
                     <MaterialIcons name="logout" color={COLORS.TITLE} size={24}/>
                 </TouchableOpacity>
             </Header>
+
+            <Search onSearch={()=>console.log('funciona')} onClear={()=>console.log('limpo')}/>
+
         </Container>
     )
 }

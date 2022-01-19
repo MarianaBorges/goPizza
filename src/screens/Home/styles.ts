@@ -23,8 +23,8 @@ export const Greeting = styled.View`
 `;
 
 export const GreetingEmoji = styled.Image`
-    width: 32;
-    height: 32;
+    width: 32px;
+    height: 32px;
     margin-right: 12px;
 `;
 
