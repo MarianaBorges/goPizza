@@ -1,10 +1,11 @@
-import React from "react";
-import { TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, TouchableOpacity, FlatList } from "react-native";
 import { MaterialIcons} from '@expo/vector-icons'
+import firestore from '@react-native-firebase/firestore';
 
 import happyEmoje from "@assets/happy.png";
 import { Search } from "@components/Search";
-import { ProductCard } from "@components/ProductCard";
+import { ProductCard, ProductProps } from "@components/ProductCard";
 
 import { 
     Container, 
@@ -16,6 +17,7 @@ import {
     MenuHeader,
     MenuItemsNumber 
 } from "./styles";
+
 import { useTheme } from "styled-components/native";
 
 const DATA = {
@@ -26,8 +28,44 @@ const DATA = {
 }
 
 export function Home(){
-
+    const [pizzas, setPizzas] = useState<ProductProps[]>([]);
+    const [search, setSearch] = useState('');
     const { COLORS } = useTheme();
+
+    function fetchPizzas(value: string){
+        const formattedValue = value.toLocaleLowerCase().trim();
+
+        firestore()
+        .collection('pizzas')
+        .orderBy('name_insensive')
+        .startAt(formattedValue)
+        .endAt(`${formattedValue}\uf8ff`)
+        .get()
+        .then(response => {
+            const data = response.docs.map(doc => {
+                return {
+                    id: doc.id,
+                    ...doc.data(),
+                }
+            }) as ProductProps[];
+
+            setPizzas(data);
+        })
+        .catch(() => Alert.alert('Consulta', 'Não foi possível fazer a consulta.'))
+    }
+
+    function handleSearch(){
+        fetchPizzas(search);
+    }
+
+    function handleSearchClear(){
+        setSearch('');
+        fetchPizzas('');
+    }
+
+    useEffect(()=>{
+        fetchPizzas('');
+    },[]);
 
     return (
         <Container>
@@ -44,15 +82,29 @@ export function Home(){
                 </TouchableOpacity>
             </Header>
 
-            <Search onSearch={()=>console.log('funciona')} onClear={()=>console.log('limpo')}/>
+            <Search 
+                onChangeText={setSearch}
+                value={search}
+                onSearch={handleSearch} 
+                onClear={handleSearchClear}
+            />
 
             <MenuHeader>
                 <Title>Cardápio</Title>
                 <MenuItemsNumber> 10 pizzas</MenuItemsNumber>
             </MenuHeader>
-            
-            <ProductCard data={DATA}/>
-            <ProductCard data={DATA}/>
+
+            <FlatList 
+                data={pizzas}
+                renderItem={({item}) => <ProductCard data={item}/> }
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                    paddingTop: 20,
+                    paddingBottom: 125,
+                    marginHorizontal: 24
+                }}
+            />
+
         </Container>
     )
 }
