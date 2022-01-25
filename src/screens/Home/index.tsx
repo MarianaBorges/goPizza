@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Alert, TouchableOpacity, FlatList } from "react-native";
 import { MaterialIcons} from '@expo/vector-icons'
 import firestore from '@react-native-firebase/firestore';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import happyEmoje from "@assets/happy.png";
 import { Search } from "@components/Search";
@@ -15,22 +16,17 @@ import {
     Header,
     Title,
     MenuHeader,
-    MenuItemsNumber 
+    MenuItemsNumber,
+    NewProductButton 
 } from "./styles";
 
 import { useTheme } from "styled-components/native";
-
-const DATA = {
-    id:'1',
-    name: 'Magherita',
-    description: 'Mussarela, manjericão fresco, parmesão e tomate',
-    photo_url: "https://firebasestorage.googleapis.com/v0/b/gopizza-e0e5f.appspot.com/o/pizzas%2F1642431932561.png?alt=media&token=06a3d0da-4ca3-4670-9a50-3cfe10fa8a3d"
-}
 
 export function Home(){
     const [pizzas, setPizzas] = useState<ProductProps[]>([]);
     const [search, setSearch] = useState('');
     const { COLORS } = useTheme();
+    const navigation = useNavigation();
 
     function fetchPizzas(value: string){
         const formattedValue = value.toLocaleLowerCase().trim();
@@ -63,9 +59,19 @@ export function Home(){
         fetchPizzas('');
     }
 
-    useEffect(()=>{
+    function handleOpen(id: string){
+        navigation.navigate('Product', { id });
+    }
+
+    function handleAdd(){
+        navigation.navigate('Product', { } );
+    }
+
+    useFocusEffect(
+       useCallback(()=>{
         fetchPizzas('');
-    },[]);
+       },[])
+    );
 
     return (
         <Container>
@@ -91,20 +97,25 @@ export function Home(){
 
             <MenuHeader>
                 <Title>Cardápio</Title>
-                <MenuItemsNumber> 10 pizzas</MenuItemsNumber>
+                <MenuItemsNumber> {pizzas.length} pizzas</MenuItemsNumber>
             </MenuHeader>
-
+            
             <FlatList 
                 data={pizzas}
-                renderItem={({item}) => <ProductCard data={item}/> }
+                renderItem={({item}) => <ProductCard 
+                                            data={item} 
+                                            onPress={()=>handleOpen(item.id)}/> }
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     paddingTop: 20,
                     paddingBottom: 125,
-                    marginHorizontal: 24
+                    marginHorizontal: 24,
                 }}
             />
-
+                <NewProductButton 
+                title="Cadastrar Pizza" 
+                type="secundary" 
+                onPress={handleAdd}/>
         </Container>
     )
 }
