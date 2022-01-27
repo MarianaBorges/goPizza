@@ -21,12 +21,14 @@ import {
 } from "./styles";
 
 import { useTheme } from "styled-components/native";
+import { useAuth } from "@hooks/auth";
 
 export function Home(){
     const [pizzas, setPizzas] = useState<ProductProps[]>([]);
     const [search, setSearch] = useState('');
     const { COLORS } = useTheme();
     const navigation = useNavigation();
+    const { signOut, user } = useAuth();
 
     function fetchPizzas(value: string){
         const formattedValue = value.toLocaleLowerCase().trim();
@@ -60,7 +62,8 @@ export function Home(){
     }
 
     function handleOpen(id: string){
-        navigation.navigate('Product', { id });
+        const route = user?.isAdmin ? "Product" : "Order";
+        navigation.navigate(route, { id });
     }
 
     function handleAdd(){
@@ -83,7 +86,7 @@ export function Home(){
                     </GreetingText>
                 </Greeting>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={signOut}>
                     <MaterialIcons name="logout" color={COLORS.TITLE} size={24}/>
                 </TouchableOpacity>
             </Header>
@@ -112,10 +115,15 @@ export function Home(){
                     marginHorizontal: 24,
                 }}
             />
+
+            {
+                user?.isAdmin &&
                 <NewProductButton 
-                title="Cadastrar Pizza" 
-                type="secundary" 
-                onPress={handleAdd}/>
+                    title="Cadastrar Pizza" 
+                    type="secundary" 
+                    onPress={handleAdd}
+                /> 
+            }
         </Container>
     )
 }

@@ -9,7 +9,7 @@ import { AuthProvider } from './src/hooks/auth';
 import theme from './src/theme';
 
 import { Routes } from './src/routes';
-import { Order } from '@screens/Order';
+import { Orders } from '@screens/Orders';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -29,7 +29,7 @@ export default function App() {
         backgroundColor='transparent'
       />
       <AuthProvider>
-        <Order />
+        <Routes />
       </AuthProvider>
     </ThemeProvider>
   );
