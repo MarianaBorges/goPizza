@@ -8,26 +8,37 @@ import {
     Description,
     StatusContainer,
     StatusLabel,
+    StatusTypesProps
  } from './styles';
+
+ export type OrderProps = {
+    id: string;
+    pizza: string;
+    image: string;
+    status: StatusTypesProps;
+    table_number: string;
+    quantity: string;
+ }
 
  type Props = TouchableOpacityProps &{
     index: number;
+    data: OrderProps;
  }
 
- export function OrderCard({index, ...rest}: Props){
+ export function OrderCard({index, data, ...rest}: Props){
     return (
         <Container index={index} {...rest}>
-            <Image source={{ uri: "https://firebasestorage.googleapis.com/v0/b/gopizza-e0e5f.appspot.com/o/pizzas%2F1643065888934.png?alt=media&token=859a9ffe-8563-4569-896d-7ca36793d2da"}} />
+            <Image source={{ uri: data.image}} />
            
-            <Name>4 Queijos</Name>
+            <Name>{data.pizza}</Name>
 
             <Description>
-                Mesa 5 ● Quant: 1 
+                Mesa {data.table_number} ● Quant: {data.quantity} 
             </Description>
 
-            <StatusContainer status="Preparando">
-                <StatusLabel status="Preparando">
-                    Preparando
+            <StatusContainer status={data.status}>
+                <StatusLabel status={data.status}>
+                    {data.status}
                 </StatusLabel>
             </StatusContainer>
         </Container>

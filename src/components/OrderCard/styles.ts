@@ -4,7 +4,7 @@ type ContainerProps = {
     index: number;
 }
 
-export type StatusTypesProps = 'Preparando' | 'Pronto' | 'Entrege';
+export type StatusTypesProps = 'Preparando' | 'Pronto' | 'Entregue';
 
 type StatusProps = {
     status: StatusTypesProps;
@@ -63,7 +63,7 @@ export const StatusContainer = styled.View<StatusProps>`
         background-color: ${theme.COLORS.ALERT_900};
     `};
 
-    ${({ status, theme }) => status === 'Entrege' && css`
+    ${({ status, theme }) => status === 'Entregue' && css`
         background-color: ${theme.COLORS.SECONDARY_900};
     `};
 `;

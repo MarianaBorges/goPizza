@@ -113,6 +113,7 @@ export function Home(){
                     paddingTop: 20,
                     paddingBottom: 125,
                     marginHorizontal: 24,
+                    backgroundColor:'red',
                 }}
             />
 
